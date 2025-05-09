@@ -36,7 +36,8 @@ import spain from '../assets/spain.jpg';
 import turkey from '../assets/turkey.jpg';
 import venice from '../assets/venice.jpg';
 import vietnam from '../assets/vietnam.jpg';
-
+import ire from "../assets/ire.jpg";
+import malay from "../assets/malay.jpg";
 // Fix Leaflet marker icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -203,6 +204,20 @@ const destinations = [
     lat: 14.0583,
     lng: 108.2772,
     image: vietnam,
+  },
+  {
+    name:"ireland",
+    keywords:["flower blossoms","chill","nature"],
+    lat:14.0583,
+    lng:108.2772,
+    image: ire,
+  },
+  {
+    name:"malaysia",
+    keywords:["culture","people","nature"],
+    lat:14.0583,
+    lng:108.2772,
+    image: malay,
   },
 ];
 

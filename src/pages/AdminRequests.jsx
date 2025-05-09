@@ -1,41 +1,39 @@
-import React from "react";
-import { Typography, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Button } from "@mui/material";
+// pages/AdminRequests.jsx
+import React, { useState } from "react";
+import { Box, Typography, Paper, Button, Stack } from "@mui/material";
 
-const requests = [
-  { id: 1, name: "Alice", destination: "Delhi", status: "Pending" },
-  { id: 2, name: "Bob", destination: "Hyderabad", status: "Approved" },
+const mockRequests = [
+  { id: 1, user: "user1@example.com", destination: "Paris", status: "Pending" },
+  { id: 2, user: "user2@example.com", destination: "Tokyo", status: "Pending" },
 ];
 
 const AdminRequests = () => {
+  const [requests, setRequests] = useState(mockRequests);
+
+  const handleApprove = id => {
+    setRequests(prev =>
+      prev.map(req => (req.id === id ? { ...req, status: "Approved" } : req))
+    );
+  };
+
   return (
-    <Paper sx={{ p: 3 }}>
-      <Typography variant="h5" gutterBottom>Manage Trip Requests</Typography>
-      <TableContainer>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Employee</TableCell>
-              <TableCell>Destination</TableCell>
-              <TableCell>Status</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {requests.map((row) => (
-              <TableRow key={row.id}>
-                <TableCell>{row.name}</TableCell>
-                <TableCell>{row.destination}</TableCell>
-                <TableCell>{row.status}</TableCell>
-                <TableCell>
-                  <Button size="small" variant="contained" color="success" sx={{ mr: 1 }}>Approve</Button>
-                  <Button size="small" variant="outlined" color="error">Reject</Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Paper>
+    <Box p={4}>
+      <Typography variant="h5">User Trip Requests</Typography>
+      {requests.map(req => (
+        <Paper key={req.id} sx={{ p: 2, my: 2 }}>
+          <Typography><strong>User:</strong> {req.user}</Typography>
+          <Typography><strong>Destination:</strong> {req.destination}</Typography>
+          <Typography><strong>Status:</strong> {req.status}</Typography>
+          <Stack direction="row" spacing={2} mt={1}>
+            {req.status === "Pending" && (
+              <Button variant="contained" onClick={() => handleApprove(req.id)}>
+                Approve
+              </Button>
+            )}
+          </Stack>
+        </Paper>
+      ))}
+    </Box>
   );
 };
 
