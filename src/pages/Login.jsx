@@ -1,77 +1,178 @@
+// Login.jsx
 import React, { useState } from 'react';
 import { loginUser } from '../services/AuthServices';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+
   const navigate = useNavigate();
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setLoading(true);
+    setErrorMessage('');
+
     try {
       const res = await loginUser({ email, password });
       localStorage.setItem('token', res.token);
       navigate('/userdashboard');
     } catch (error) {
-      alert('Invalid credentials');
+      setErrorMessage('Invalid email or password');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <form
-        onSubmit={handleLogin}
-        className="bg-white p-12 rounded-3xl shadow-2xl w-full sm:w-96 flex flex-col gap-8"
-      >
-        <h2 className="text-4xl font-bold text-center text-gray-800 mb-8">Login</h2>
+    <div style={styles.body}>
+      <div style={styles.signupContainer}>
+        <h1 style={styles.header}>Login to Your Account</h1>
+        {errorMessage && (
+          <p style={{ color: 'red', textAlign: 'center', marginBottom: '15px' }}>
+            {errorMessage}
+          </p>
+        )}
+        <form onSubmit={handleLogin}>
+          {/* Email Input */}
+          <div style={styles.formGroup}>
+            <label htmlFor="email" style={styles.label}>Email Address</label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              style={styles.input}
+            />
+          </div>
 
-        {/* Email Input */}
-        <div className="flex flex-col gap-3">
-          <label className="text-xl text-gray-800 font-semibold" htmlFor="email">Enter your Email</label>
-          <input
-            type="email"
-            id="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder="example@example.com"
-            className="border border-gray-300 px-6 py-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
-          />
-        </div>
+          {/* Password Input */}
+          <div style={styles.formGroup}>
+            <label htmlFor="password" style={styles.label}>Password</label>
+            <div style={{ position: 'relative' }}>
+              <input
+                type={showPassword ? 'text' : 'password'}
+                id="password"
+                name="password"
+                required
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                style={styles.input}
+              />
+              <button
+                type="button"
+                onClick={() => setShowPassword(!showPassword)}
+                style={{
+                  position: 'absolute',
+                  right: '10px',
+                  top: '50%',
+                  transform: 'translateY(-50%)',
+                  background: 'none',
+                  border: 'none',
+                  color: '#003366',
+                  fontSize: '12px',
+                  cursor: 'pointer',
+                }}
+              >
+                {showPassword ? 'Hide' : 'Show'}
+              </button>
+            </div>
+          </div>
 
-        {/* Password Input */}
-        <div className="flex flex-col gap-3">
-          <label className="text-xl text-gray-800 font-semibold" htmlFor="password">Enter your Password</label>
-          <input
-            type="password"
-            id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder="Enter your password"
-            className="border border-gray-300 px-6 py-4 rounded-xl text-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
-            required
-          />
-        </div>
+          {/* Login Button */}
+          <button
+            type="submit"
+            style={{
+              ...styles.button,
+              backgroundColor: loading ? '#999' : styles.button.backgroundColor,
+              cursor: loading ? 'not-allowed' : 'pointer',
+            }}
+            disabled={loading}
+          >
+            {loading ? 'Logging in...' : 'Login'}
+          </button>
+        </form>
 
-        {/* Login Button */}
-        <button
-          type="submit"
-          className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white py-4 rounded-xl text-lg hover:bg-gradient-to-r hover:from-purple-600 hover:to-indigo-600 transition duration-300"
-        >
-          Login
-        </button>
-
-        {/* Sign Up Link */}
-        <p className="text-lg text-center mt-4 text-gray-700">
-          Don't have an account?{' '}
-          <a href="/signup" className="text-purple-600 hover:underline">
+        {/* Signup Link */}
+        <div style={styles.loginLink}>
+          Don’t have an account?{' '}
+          <Link to="/signup" style={styles.link}>
             Sign up
-          </a>
-        </p>
-      </form>
+          </Link>
+        </div>
+      </div>
     </div>
   );
+};
+
+// Reusing the same style from Signup.jsx
+const styles = {
+  body: {
+    fontFamily: "'Arial', sans-serif",
+    backgroundColor: '#f5f5f5',
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    color: '#333',
+  },
+  signupContainer: {
+    backgroundColor: 'white',
+    padding: '40px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    width: '350px',
+  },
+  header: {
+    color: '#003366',
+    textAlign: 'center',
+    marginBottom: '30px',
+    fontSize: '24px',
+  },
+  formGroup: {
+    marginBottom: '20px',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '8px',
+    color: '#555',
+    fontSize: '14px',
+  },
+  input: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+    fontSize: '14px',
+  },
+  button: {
+    backgroundColor: '#003366',
+    color: 'white',
+    border: 'none',
+    padding: '12px',
+    width: '100%',
+    borderRadius: '4px',
+    fontSize: '16px',
+    transition: 'background-color 0.3s',
+  },
+  loginLink: {
+    textAlign: 'center',
+    marginTop: '20px',
+    fontSize: '14px',
+  },
+  link: {
+    color: '#003366',
+    textDecoration: 'none',
+  },
 };
 
 export default Login;

@@ -11,6 +11,9 @@ import Recommendations from "./pages/Recommendations";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import DestinationDetails from "./pages/DestinationDetails";
+import Payment from "./pages/Payment";
+import Success from "./pages/Success";
 
 
 function App() {
@@ -28,7 +31,9 @@ function App() {
           <Route path="admin-requests" element={<AdminRequests />} />
           <Route path="admin-announcements" element={<AdminAnnouncements />} />
           <Route path="recommendations" element={<Recommendations />} />
-          
+          <Route path="/pages/:destinationName" element={<DestinationDetails />} />
+          <Route path="/payment" element={<Payment />} />
+          <Route path="/success" element={<Success />} />
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Error404 />} />
         </Route>

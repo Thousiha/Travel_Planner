@@ -9,10 +9,19 @@ import {
   CardActions,
   Box,
   CardMedia,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  DialogActions,
+  List,
+  ListItem,
+  ListItemText
 } from "@mui/material";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import { useNavigate } from "react-router-dom";
 
 import azer from '../assets/azer.jpg';
 import bali from '../assets/bali.jpg';
@@ -38,6 +47,7 @@ import venice from '../assets/venice.jpg';
 import vietnam from '../assets/vietnam.jpg';
 import ire from "../assets/ire.jpg";
 import malay from "../assets/malay.jpg";
+
 // Fix Leaflet marker icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
 L.Icon.Default.mergeOptions({
@@ -49,185 +59,59 @@ L.Icon.Default.mergeOptions({
     "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
 });
 
-// Destination data with coordinates and image URLs
-const destinations = [
+const generatePackages = (destinationName) => ([
   {
-    name: "Azerbaijan",
-    keywords: ["mountains", "culture", "caspian", "history"],
-    lat: 40.1431,
-    lng: 47.5769,
-    image: azer,
+    title: "Package 1",
+    cost: "$1000",
+    foods: "Breakfast, Dinner",
+    stay: "3-star hotel",
+    features: ["City tour", "Museum entry", "Local guide"]
   },
   {
-    name: "Bali",
-    keywords: ["beach", "relax", "nature", "island"],
-    lat: -8.3405,
-    lng: 115.0920,
-    image: bali,
-  },
-  {
-    name: "Bangkok",
-    keywords: ["city", "nightlife", "shopping", "culture"],
-    lat: 13.7563,
-    lng: 100.5018,
-    image: bangkok,
-  },
-  {
-    name: "Cambodia",
-    keywords: ["temples", "history", "culture", "nature"],
-    lat: 12.5657,
-    lng: 104.9910,
-    image: cambodia,
-  },
-  {
-    name: "Costa Rica",
-    keywords: ["rainforest", "adventure", "wildlife", "beach"],
-    lat: 9.7489,
-    lng: -83.7534,
-    image: costa,
-  },
-  {
-    name: "Dubai",
-    keywords: ["luxury", "shopping", "desert", "city"],
-    lat: 25.276987,
-    lng: 55.296249,
-    image: dubai,
-  },
-  {
-    name: "Egypt",
-    keywords: ["pyramids", "history", "desert", "ancient"],
-    lat: 26.8206,
-    lng: 30.8025,
-    image: egypt,
-  },
-  {
-    name: "Hungary",
-    keywords: ["culture", "europe", "history", "thermal"],
-    lat: 47.1625,
-    lng: 19.5033,
-    image: hungary,
-  },
-  {
-    name: "Indonesia",
-    keywords: ["islands", "diving", "culture", "nature"],
-    lat: -0.7893,
-    lng: 113.9213,
-    image: indonesia,
-  },
-  {
-    name: "Kazakhstan",
-    keywords: ["steppe", "mountains", "nature", "culture"],
-    lat: 48.0196,
-    lng: 66.9237,
-    image: kazakh,
-  },
-  {
-    name: "Kenya",
-    keywords: ["safari", "wildlife", "nature", "africa"],
-    lat: -1.2921,
-    lng: 36.8219,
-    image: kenya,
-  },
-  {
-    name: "Krabi",
-    keywords: ["beach", "island", "cliffs", "relax"],
-    lat: 8.0863,
-    lng: 98.9063,
-    image: krabi,
-  },
-  {
-    name: "Maldives",
-    keywords: ["luxury", "island", "beach", "resort"],
-    lat: 3.2028,
-    lng: 73.2207,
-    image: maldives,
-  },
-  {
-    name: "Mauritius",
-    keywords: ["beach", "island", "relax", "nature"],
-    lat: -20.3484,
-    lng: 57.5522,
-    image: mauritius,
-  },
-  {
-    name: "Netherlands",
-    keywords: ["europe", "tulips", "cycling", "canals"],
-    lat: 52.1326,
-    lng: 5.2913,
-    image: nether,
-  },
-  {
-    name: "Philippines",
-    keywords: ["islands", "beach", "diving", "nature"],
-    lat: 13.41,
-    lng: 122.56,
-    image: phillip,
-  },
-  {
-    name: "Saudi Arabia",
-    keywords: ["desert", "religion", "culture", "history"],
-    lat: 23.8859,
-    lng: 45.0792,
-    image: saudi,
-  },
-  {
-    name: "Singapore",
-    keywords: ["city", "modern", "technology", "clean"],
-    lat: 1.3521,
-    lng: 103.8198,
-    image: singapore,
-  },
-  {
-    name: "Spain",
-    keywords: ["europe", "culture", "beach", "history"],
-    lat: 40.4637,
-    lng: -3.7492,
-    image: spain,
-  },
-  {
-    name: "Turkey",
-    keywords: ["europe", "asia", "history", "culture"],
-    lat: 38.9637,
-    lng: 35.2433,
-    image: turkey,
-  },
-  {
-    name: "Venice",
-    keywords: ["canals", "romance", "italy", "europe"],
-    lat: 45.4408,
-    lng: 12.3155,
-    image: venice,
-  },
-  {
-    name: "Vietnam",
-    keywords: ["asia", "culture", "history", "nature"],
-    lat: 14.0583,
-    lng: 108.2772,
-    image: vietnam,
-  },
-  {
-    name:"ireland",
-    keywords:["flower blossoms","chill","nature"],
-    lat:14.0583,
-    lng:108.2772,
-    image: ire,
-  },
-  {
-    name:"malaysia",
-    keywords:["culture","people","nature"],
-    lat:14.0583,
-    lng:108.2772,
-    image: malay,
-  },
-];
+    title: "Package 2",
+    cost: "$1500",
+    foods: "All meals included",
+    stay: "4-star resort",
+    features: ["City tour", "Boat ride", "Cultural night"]
+  }
+]);
 
+const destinations = [
+  { name: "Azerbaijan", keywords: ["mountains", "culture", "caspian", "history"], lat: 40.1431, lng: 47.5769, image: azer },
+  { name: "Bali", keywords: ["beach", "relax", "nature", "island"], lat: -8.3405, lng: 115.0920, image: bali },
+  { name: "Bangkok", keywords: ["city", "nightlife", "shopping", "culture"], lat: 13.7563, lng: 100.5018, image: bangkok },
+  { name: "Cambodia", keywords: ["temples", "history", "culture", "nature"], lat: 12.5657, lng: 104.9910, image: cambodia },
+  { name: "Costa Rica", keywords: ["rainforest", "adventure", "wildlife", "beach"], lat: 9.7489, lng: -83.7534, image: costa },
+  { name: "Dubai", keywords: ["luxury", "shopping", "desert", "city"], lat: 25.276987, lng: 55.296249, image: dubai },
+  { name: "Egypt", keywords: ["pyramids", "history", "desert", "ancient"], lat: 26.8206, lng: 30.8025, image: egypt },
+  { name: "Hungary", keywords: ["culture", "europe", "history", "thermal"], lat: 47.1625, lng: 19.5033, image: hungary },
+  { name: "Indonesia", keywords: ["islands", "diving", "culture", "nature"], lat: -0.7893, lng: 113.9213, image: indonesia },
+  { name: "Kazakhstan", keywords: ["steppe", "mountains", "nature", "culture"], lat: 48.0196, lng: 66.9237, image: kazakh },
+  { name: "Kenya", keywords: ["safari", "wildlife", "nature", "africa"], lat: -1.2921, lng: 36.8219, image: kenya },
+  { name: "Krabi", keywords: ["beach", "island", "cliffs", "relax"], lat: 8.0863, lng: 98.9063, image: krabi },
+  { name: "Maldives", keywords: ["luxury", "island", "beach", "resort"], lat: 3.2028, lng: 73.2207, image: maldives },
+  { name: "Mauritius", keywords: ["beach", "island", "relax", "nature"], lat: -20.3484, lng: 57.5522, image: mauritius },
+  { name: "Netherlands", keywords: ["europe", "tulips", "cycling", "canals"], lat: 52.1326, lng: 5.2913, image: nether },
+  { name: "Philippines", keywords: ["islands", "beach", "diving", "nature"], lat: 13.41, lng: 122.56, image: phillip },
+  { name: "Saudi Arabia", keywords: ["desert", "religion", "culture", "history"], lat: 23.8859, lng: 45.0792, image: saudi },
+  { name: "Singapore", keywords: ["city", "modern", "technology", "clean"], lat: 1.3521, lng: 103.8198, image: singapore },
+  { name: "Spain", keywords: ["europe", "culture", "beach", "history"], lat: 40.4637, lng: -3.7492, image: spain },
+  { name: "Turkey", keywords: ["europe", "asia", "history", "culture"], lat: 38.9637, lng: 35.2433, image: turkey },
+  { name: "Venice", keywords: ["canals", "romance", "italy", "europe"], lat: 45.4408, lng: 12.3155, image: venice },
+  { name: "Vietnam", keywords: ["asia", "culture", "history", "nature"], lat: 14.0583, lng: 108.2772, image: vietnam },
+  { name: "Ireland", keywords: ["flower blossoms", "chill", "nature"], lat: 53.1424, lng: -7.6921, image: ire },
+  { name: "Malaysia", keywords: ["culture", "people", "nature"], lat: 4.2105, lng: 101.9758, image: malay },
+];
 
 const Recommendations = () => {
   const [input, setInput] = useState("");
   const [results, setResults] = useState(destinations);
+  const [open, setOpen] = useState(false);
+  const [selectedPlace, setSelectedPlace] = useState(null);
+  const navigate = useNavigate();
 
   const handleSearch = () => {
-    const interests = input.toLowerCase().split(/[\s,]+/);
+    const interests = input.toLowerCase().split(/\s|,+/).filter(Boolean);
     const matched = destinations.filter((dest) =>
       dest.keywords.some((k) => interests.includes(k))
     );
@@ -237,6 +121,15 @@ const Recommendations = () => {
   const handleMapClick = (place) => {
     setResults([place]);
     setInput(place.keywords.join(", "));
+  };
+
+  const handleViewDetails = (place) => {
+    setSelectedPlace({ ...place, packages: generatePackages(place.name) });
+    setOpen(true);
+  };
+
+  const handleBook = (pkg, placeName) => {
+    navigate("/payment", { state: { package: pkg, destination: placeName } });
   };
 
   return (
@@ -256,7 +149,6 @@ const Recommendations = () => {
         Search
       </Button>
 
-      {/* Interactive Map */}
       <Box sx={{ height: "400px", my: 3 }}>
         <MapContainer center={[20, 0]} zoom={2} style={{ height: "100%", width: "100%" }}>
           <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
@@ -264,9 +156,7 @@ const Recommendations = () => {
             <Marker
               key={place.name}
               position={[place.lat, place.lng]}
-              eventHandlers={{
-                click: () => handleMapClick(place),
-              }}
+              eventHandlers={{ click: () => handleMapClick(place) }}
             >
               <Popup>{place.name}</Popup>
             </Marker>
@@ -274,7 +164,6 @@ const Recommendations = () => {
         </MapContainer>
       </Box>
 
-      {/* Destination Cards */}
       <Grid container spacing={3}>
         {results.map((place) => (
           <Grid item xs={12} sm={6} md={4} key={place.name}>
@@ -284,7 +173,7 @@ const Recommendations = () => {
                   component="img"
                   height="140"
                   image={place.image}
-                  alt={place.name}
+                  alt={`${place.name} scenic view`}
                 />
               )}
               <CardContent>
@@ -297,7 +186,7 @@ const Recommendations = () => {
                 <Button
                   size="small"
                   variant="outlined"
-                  onClick={() => alert(`More about ${place.name}`)}
+                  onClick={() => handleViewDetails(place)}
                 >
                   View Details
                 </Button>
@@ -311,6 +200,38 @@ const Recommendations = () => {
           </Typography>
         )}
       </Grid>
+
+      <Dialog open={open} onClose={() => setOpen(false)} maxWidth="sm" fullWidth>
+        <DialogTitle>Packages for {selectedPlace?.name}</DialogTitle>
+        <DialogContent>
+          {selectedPlace?.packages.map((pkg, index) => (
+            <Box key={index} sx={{ mb: 2, borderBottom: '1px solid #ccc', pb: 2 }}>
+              <Typography variant="h6">{pkg.title}</Typography>
+              <DialogContentText>Cost: {pkg.cost}</DialogContentText>
+              <DialogContentText>Foods: {pkg.foods}</DialogContentText>
+              <DialogContentText>Stay: {pkg.stay}</DialogContentText>
+              <Typography variant="subtitle2">Features:</Typography>
+              <List dense>
+                {pkg.features.map((f, i) => (
+                  <ListItem key={i}>
+                    <ListItemText primary={f} />
+                  </ListItem>
+                ))}
+              </List>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => handleBook(pkg, selectedPlace.name)}
+              >
+                Book Now
+              </Button>
+            </Box>
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };

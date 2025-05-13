@@ -28,7 +28,7 @@ const AdminLayout = () => {
       <AppBar position="fixed" sx={{ backgroundColor: "#0288d1" }}>
         <Toolbar sx={{ justifyContent: "space-between", alignItems: "start", flexDirection: "row" }}>
           <Typography variant="h6" color="inherit" sx={{ pt: 1 }}>
-            Travel Planner
+            Travel Dzire
           </Typography>
 
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-end" }}>

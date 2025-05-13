@@ -1,115 +1,143 @@
-import React, { useState } from 'react';
-import { registerUser } from '../services/AuthServices';
-import { useNavigate, Link } from 'react-router-dom';
-import { Eye, EyeOff } from 'lucide-react';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+// SignupPage.jsx
+import React from 'react';
+import { Link } from 'react-router-dom'; 
 
 const Signup = () => {
-  const navigate = useNavigate();
-  const [formData, setFormData] = useState({ name: '', email: '', password: '' });
-  const [showPassword, setShowPassword] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSignup = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    try {
-      const res = await registerUser(formData);
-      localStorage.setItem('token', res.token);
-      toast.success('Signup successful! Redirecting...', { autoClose: 1500 });
-      setTimeout(() => navigate('/userdashboard'), 1800);
-    } catch (err) {
-      toast.error('Signup failed. Please try again.');
-    } finally {
-      setLoading(false);
-    }
+    // Handle form submission here
+    console.log('Form submitted');
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300 dark:from-gray-900 dark:to-gray-800 transition-colors duration-300 px-4">
-      <div className="bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100 shadow-xl rounded-2xl w-full max-w-md p-8 sm:p-10">
-        <h2 className="text-3xl font-bold mb-1 text-center">Sign Up</h2>
-        <p className="text-sm text-gray-500 dark:text-gray-400 mb-6 text-center">
-          Create your account and start your journey
-        </p>
-
-        <form onSubmit={handleSignup} className="space-y-4">
-          <div>
-            <label className="block text-sm font-medium">Name</label>
+    <div style={styles.body}>
+      <div style={styles.signupContainer}>
+        <h1 style={styles.header}>Create Your Account</h1>
+        <form onSubmit={handleSubmit}>
+          <div style={styles.formGroup}>
+            <label htmlFor="name" style={styles.label}>Full Name</label>
             <input
               type="text"
+              id="name"
               name="name"
-              value={formData.name}
-              onChange={handleChange}
               required
-              placeholder="John Doe"
-              className="w-full mt-1 px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+              style={styles.input}
             />
           </div>
-
-          <div>
-            <label className="block text-sm font-medium">Email</label>
+          <div style={styles.formGroup}>
+            <label htmlFor="email" style={styles.label}>Email Address</label>
             <input
               type="email"
+              id="email"
               name="email"
-              value={formData.email}
-              onChange={handleChange}
               required
-              placeholder="you@example.com"
-              className="w-full mt-1 px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+              style={styles.input}
             />
           </div>
-
-          <div className="relative">
-            <label className="block text-sm font-medium">Password</label>
+          <div style={styles.formGroup}>
+            <label htmlFor="password" style={styles.label}>Password</label>
             <input
-              type={showPassword ? 'text' : 'password'}
+              type="password"
+              id="password"
               name="password"
-              value={formData.password}
-              onChange={handleChange}
               required
-              placeholder="••••••••"
-              className="w-full mt-1 px-4 py-3 border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 dark:focus:ring-indigo-400"
+              style={styles.input}
             />
-            <div
-              className="absolute right-4 top-10 text-gray-500 dark:text-gray-300 cursor-pointer"
-              onClick={() => setShowPassword(!showPassword)}
-            >
-              {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-            </div>
           </div>
-
-          <button
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3 text-white font-semibold rounded-md transition ${
-              loading
-                ? 'bg-indigo-400 cursor-not-allowed'
-                : 'bg-indigo-600 hover:bg-indigo-700 dark:bg-indigo-500 dark:hover:bg-indigo-600'
-            }`}
-          >
-            {loading ? 'Signing up...' : 'Create Account'}
-          </button>
+          <div style={styles.formGroup}>
+            <label htmlFor="confirm-password" style={styles.label}>Confirm Password</label>
+            <input
+              type="password"
+              id="confirm-password"
+              name="confirm-password"
+              required
+              style={styles.input}
+            />
+          </div>
+          <button type="submit" style={styles.button}>Sign Up</button>
         </form>
-
-        <p className="mt-6 text-sm text-center text-gray-600 dark:text-gray-400">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
-            Log in
-          </Link>
-        </p>
-
-        <ToastContainer position="top-right" />
+        <div style={styles.loginLink}>
+  Already have an account?{' '}
+  <Link to="/login" style={styles.link}>Log in</Link> {/* ✅ FIXED */}
+</div>
       </div>
     </div>
   );
 };
 
+// Styles
+const styles = {
+  body: {
+    fontFamily: "'Arial', sans-serif",
+    backgroundColor: '#f5f5f5', // Dull white background
+    margin: 0,
+    padding: 0,
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    height: '100vh',
+    color: '#333',
+  },
+  signupContainer: {
+    backgroundColor: 'white',
+    padding: '40px',
+    borderRadius: '8px',
+    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.1)',
+    width: '350px',
+  },
+  header: {
+    color: '#003366', // Deep sea blue
+    textAlign: 'center',
+    marginBottom: '30px',
+    fontSize: '24px',
+  },
+  formGroup: {
+    marginBottom: '20px',
+  },
+  label: {
+    display: 'block',
+    marginBottom: '8px',
+    color: '#555',
+    fontSize: '14px',
+  },
+  input: {
+    width: '100%',
+    padding: '12px',
+    border: '1px solid #ddd',
+    borderRadius: '4px',
+    boxSizing: 'border-box',
+    fontSize: '14px',
+  },
+  inputFocus: {
+    outline: 'none',
+    borderColor: '#003366',
+  },
+  button: {
+    backgroundColor: '#003366', // Deep sea blue
+    color: 'white',
+    border: 'none',
+    padding: '12px',
+    width: '100%',
+    borderRadius: '4px',
+    fontSize: '16px',
+    cursor: 'pointer',
+    transition: 'background-color 0.3s',
+  },
+  buttonHover: {
+    backgroundColor: '#002244', // Darker shade of deep sea blue
+  },
+  loginLink: {
+    textAlign: 'center',
+    marginTop: '20px',
+    fontSize: '14px',
+  },
+  link: {
+    color: '#003366',
+    textDecoration: 'none',
+  },
+  linkHover: {
+    textDecoration: 'underline',
+  },
+};
+
 export default Signup;
-
-
