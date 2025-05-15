@@ -7,14 +7,16 @@ import AdminRequests from "./pages/AdminRequests";
 import AdminAnnouncements from "./pages/AdminAnnouncements";
 import Error404 from "./pages/Error404";
 import ErrorUnauthorized from "./pages/ErrorUnauthorized";
-import Recommendations from "./pages/Recommendations";
+import Discover from "./pages/Discover";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import DestinationDetails from "./pages/DestinationDetails";
-import Payment from "./pages/Payment";
+import Payment from "./pages/Payment"; 
 import Success from "./pages/Success";
-
+import Contact from "./pages/Contact";
+import Terms from "./pages/Terms";
+import About from "./pages/About";
+import DestinationPackages from "./pages/DestinationPackages";
 
 function App() {
   return (
@@ -30,10 +32,13 @@ function App() {
           <Route path="request-status" element={<RequestStatus />} />
           <Route path="admin-requests" element={<AdminRequests />} />
           <Route path="admin-announcements" element={<AdminAnnouncements />} />
-          <Route path="recommendations" element={<Recommendations />} />
-          <Route path="/pages/:destinationName" element={<DestinationDetails />} />
+          <Route path="discover" element={<Discover />} />
           <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<Success />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/terms" element={<Terms />} />
+           <Route path="/destinationpackages" element={<DestinationPackages/>} />
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Error404 />} />
         </Route>

@@ -2,6 +2,7 @@ import React from "react";
 import { Box, Typography, Button, Grid, Card, CardContent, Container } from "@mui/material";
 import CountUp from 'react-countup';
 import HeroImage from "../assets/hero.jpg"; 
+import travel from "../assets/travel.png";
 
 const Home = () => {
   return (
@@ -92,7 +93,7 @@ const Home = () => {
       <Box sx={{ bgcolor: '#f5f5f5', py: 4, textAlign: "center" }}>
         <Typography variant="body2">© 2025 Travel Planner. All rights reserved.</Typography>
         <Box mt={1}>
-          <Button href="mailto:support@travelplanner.com" size="small" aria-label="Contact Support">Contact</Button>
+          <Button href="/Contact" size="small" aria-label="Contact Support">Contact</Button>
           <Button href="/about" size="small" aria-label="Learn more about us">About</Button>
           <Button href="/terms" size="small" aria-label="Read Terms and Conditions">Terms</Button>
         </Box>
