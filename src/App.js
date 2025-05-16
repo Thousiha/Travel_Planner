@@ -11,13 +11,12 @@ import Discover from "./pages/Discover";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Payment from "./pages/Payment"; 
 import Success from "./pages/Success";
 import Contact from "./pages/Contact";
 import Terms from "./pages/Terms";
 import About from "./pages/About";
 import DestinationPackages from "./pages/DestinationPackages";
-
+import Payment from "./pages/Payment";
 function App() {
   return (
     <Router>
@@ -33,11 +32,11 @@ function App() {
           <Route path="admin-requests" element={<AdminRequests />} />
           <Route path="admin-announcements" element={<AdminAnnouncements />} />
           <Route path="discover" element={<Discover />} />
-          <Route path="/payment" element={<Payment />} />
           <Route path="/success" element={<Success />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/about" element={<About />} />
           <Route path="/terms" element={<Terms />} />
+          <Route path="/payment" element ={<Payment/>}/>
            <Route path="/destinationpackages" element={<DestinationPackages/>} />
           {/* Catch-all for unknown routes */}
           <Route path="*" element={<Error404 />} />

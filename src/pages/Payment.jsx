@@ -1,63 +1,83 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';
-import { Typography, Box, Button, CircularProgress } from '@mui/material';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe('pk_test_YOUR_PUBLISHABLE_KEY'); // Replace with your Stripe key
+import React, { useState } from "react";
+import { Typography, Box, Button, TextField, Card, CardContent, Divider } from "@mui/material";
 
 const Payment = () => {
-  const location = useLocation();
-  const { package: selectedPackage, destination } = location.state || {};
-  const [loading, setLoading] = useState(false);
+  const [name, setName] = useState("");
+  const [cardNumber, setCardNumber] = useState("");
+  const [expiry, setExpiry] = useState("");
+  const [cvv, setCvv] = useState("");
+  const [amount, setAmount] = useState("");
+  const [paymentSuccess, setPaymentSuccess] = useState(false);
 
-  const handlePayment = async () => {
-    setLoading(true);
-    const stripe = await stripePromise;
-
-    const response = await fetch('http://localhost:8080/api/create-checkout-session', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        destination,
-        title: selectedPackage.title,
-        cost: selectedPackage.cost,
-      }),
-    });
-
-    const session = await response.json();
-    const result = await stripe.redirectToCheckout({ sessionId: session.id });
-
-    if (result.error) {
-      alert(result.error.message);
-      setLoading(false);
+  const handlePayment = () => {
+    if (name && cardNumber && expiry && cvv && amount) {
+      setPaymentSuccess(true);
     }
   };
 
-  if (!selectedPackage || !destination) {
-    return <Typography variant="h6">Invalid booking data. Please go back and try again.</Typography>;
-  }
-
   return (
-    <Box sx={{ p: 4, maxWidth: 600, mx: 'auto', mt: 5, boxShadow: 3, borderRadius: 3 }}>
-      <Typography variant="h4" gutterBottom>Secure Payment</Typography>
-      <Typography variant="h6" color="text.secondary">Destination: {destination}</Typography>
-      <Typography variant="body1">Package: <strong>{selectedPackage.title}</strong></Typography>
-      <Typography variant="body1">Cost: ₹{selectedPackage.cost}</Typography>
-      <Typography variant="body1">Includes: {selectedPackage.foods} | {selectedPackage.stay}</Typography>
-      <Typography variant="body2" sx={{ mt: 2, mb: 3 }} color="text.secondary">
-        Proceed to secure checkout powered by Stripe.
-      </Typography>
+    <Box sx={{ p: 4, maxWidth: 500, mx: "auto", mt: 5 }}>
+      <Card sx={{ boxShadow: 5, borderRadius: 2 }}>
+        <CardContent>
+          <Typography variant="h4" align="center" gutterBottom>
+            Secure Checkout
+          </Typography>
+          <Divider sx={{ mb: 3 }} />
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={handlePayment}
-        disabled={loading}
-        fullWidth
-        sx={{ py: 1.5 }}
-      >
-        {loading ? <CircularProgress size={24} color="inherit" /> : 'Pay with Stripe'}
-      </Button>
+          {!paymentSuccess ? (
+            <>
+              <TextField 
+                label="Name on Card" 
+                variant="outlined" 
+                fullWidth 
+                sx={{ mb: 2 }} 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+              />
+              <TextField 
+                label="Card Number" 
+                variant="outlined" 
+                fullWidth 
+                sx={{ mb: 2 }} 
+                value={cardNumber} 
+                onChange={(e) => setCardNumber(e.target.value)} 
+              />
+              <Box sx={{ display: "flex", gap: 2, mb: 2 }}>
+                <TextField 
+                  label="Expiry Date" 
+                  variant="outlined" 
+                  fullWidth 
+                  value={expiry} 
+                  onChange={(e) => setExpiry(e.target.value)} 
+                />
+                <TextField 
+                  label="CVV" 
+                  variant="outlined" 
+                  fullWidth 
+                  value={cvv} 
+                  onChange={(e) => setCvv(e.target.value)} 
+                />
+              </Box>
+              <TextField 
+                label="Amount (₹)" 
+                variant="outlined" 
+                fullWidth 
+                sx={{ mb: 3 }} 
+                value={amount} 
+                onChange={(e) => setAmount(e.target.value)} 
+              />
+
+              <Button variant="contained" color="primary" onClick={handlePayment} fullWidth sx={{ py: 1.5 }}>
+                Pay Now
+              </Button>
+            </>
+          ) : (
+            <Typography variant="h6" color="success.main" align="center">
+              Payment of ₹{amount} successful!
+            </Typography>
+          )}
+        </CardContent>
+      </Card>
     </Box>
   );
 };

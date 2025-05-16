@@ -25,7 +25,6 @@ import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 import destinationPackages from "../pages/DestinationPackages";
-import Payment from "./Payment";
 
 import azer from "../assets/azer.jpg";
 import bali from "../assets/bali.jpg";
