@@ -19,6 +19,8 @@ import DestinationPackages from "./pages/DestinationPackages";
 import Payment from "./pages/Payment";
 import AdminDashboard from "./pages/AdminDashboard";
 import UserDashboard from "./pages/UserDashboard";
+import AdminProfile from "./pages/AdminProfile";
+import UserProfile from "./pages/UserProfile";
 import PrivateRoute from "./components/PrivateRoute";
 
 function App() {
@@ -55,9 +57,19 @@ function App() {
               <AdminDashboard />
             </PrivateRoute>
           } />
+          <Route path="admin-profile" element={
+            <PrivateRoute allowedRoles={['admin']}>
+              <AdminProfile />
+            </PrivateRoute>
+          } />
           <Route path="user-dashboard" element={
             <PrivateRoute allowedRoles={['user']}>
               <UserDashboard />
+            </PrivateRoute>
+          } />
+          <Route path="user-profile" element={
+            <PrivateRoute allowedRoles={['user']}>
+              <UserProfile />
             </PrivateRoute>
           } />
           <Route path="discover" element={<Discover />} />
