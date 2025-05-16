@@ -1,7 +1,6 @@
-// Login.jsx
 import React, { useState } from 'react';
-import { loginUser } from '../services/AuthServices';
 import { useNavigate, Link } from 'react-router-dom';
+import { loginUser } from '../services/AuthServices';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -18,9 +17,23 @@ const Login = () => {
     setErrorMessage('');
 
     try {
-      const res = await loginUser({ email, password });
-      localStorage.setItem('token', res.token);
-      navigate('/userdashboard');
+      const response = await loginUser({ email, password });
+      localStorage.setItem('token', response.token);
+      
+      // Decode token to get role and redirect accordingly
+      const base64Url = response.token.split('.')[1];
+      const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+      const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+        return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+      }).join(''));
+      
+      const { role } = JSON.parse(jsonPayload);
+      
+      if (role === 'admin') {
+        navigate('/admin-dashboard');
+      } else {
+        navigate('/user-dashboard');
+      }
     } catch (error) {
       setErrorMessage('Invalid email or password');
     } finally {
@@ -38,32 +51,28 @@ const Login = () => {
           </p>
         )}
         <form onSubmit={handleLogin}>
-          {/* Email Input */}
           <div style={styles.formGroup}>
             <label htmlFor="email" style={styles.label}>Email Address</label>
             <input
               type="email"
               id="email"
-              name="email"
-              required
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               style={styles.input}
+              required
             />
           </div>
 
-          {/* Password Input */}
           <div style={styles.formGroup}>
             <label htmlFor="password" style={styles.label}>Password</label>
             <div style={{ position: 'relative' }}>
               <input
                 type={showPassword ? 'text' : 'password'}
                 id="password"
-                name="password"
-                required
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 style={styles.input}
+                required
               />
               <button
                 type="button"
@@ -85,7 +94,6 @@ const Login = () => {
             </div>
           </div>
 
-          {/* Login Button */}
           <button
             type="submit"
             style={{
@@ -99,9 +107,8 @@ const Login = () => {
           </button>
         </form>
 
-        {/* Signup Link */}
         <div style={styles.loginLink}>
-          Don’t have an account?{' '}
+          Don't have an account?{' '}
           <Link to="/signup" style={styles.link}>
             Sign up
           </Link>
@@ -111,7 +118,6 @@ const Login = () => {
   );
 };
 
-// Reusing the same style from Signup.jsx
 const styles = {
   body: {
     fontFamily: "'Arial', sans-serif",
