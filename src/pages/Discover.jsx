@@ -26,6 +26,7 @@ import "leaflet/dist/leaflet.css";
 
 import destinationPackages from "../pages/DestinationPackages";
 
+// Image imports
 import azer from "../assets/azer.jpg";
 import bali from "../assets/bali.jpg";
 import bangkok from "../assets/bangkok.jpg";
@@ -95,57 +96,55 @@ const Discover = () => {
     dest.name.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-const renderPackageDialog = () => {
-  if (!selectedDestination) return null;
+  const renderPackageDialog = () => {
+    if (!selectedDestination) return null;
 
-  const packages = destinationPackages[selectedDestination.name] || [];
+    const packages = destinationPackages[selectedDestination.name] || [];
 
-  return (
-    <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
-      <DialogTitle>{selectedDestination.name} Packages</DialogTitle>
-      <DialogContent>
-        {packages.map((pkg, index) => (
-          <Box key={index} mb={2} borderBottom="1px solid #ccc" pb={2}>
-            <Typography variant="h6">{pkg.title}</Typography>
-            <List>
-              <ListItem>
-                <ListItemText primary={`Cost: ${pkg.cost}`} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary={`Foods: ${pkg.foods}`} />
-              </ListItem>
-              <ListItem>
-                <ListItemText primary={`Stay: ${pkg.stay}`} />
-              </ListItem>
-              <ListItem>
-                <ListItemText
-                  primary={`Features: ${pkg.features.join(", ")}`}
-                />
-              </ListItem>
-            </List>
-            <Box display="flex" justifyContent="flex-end">
-             <Button
-              variant="contained"
-              color="primary"
-             onClick={() => {
-             handleClose();
-             navigate("/Payment");
-
-  }}
->
-  Book Now
-</Button>
-
+    return (
+      <Dialog open={open} onClose={handleClose} maxWidth="sm" fullWidth>
+        <DialogTitle>{selectedDestination.name} Packages</DialogTitle>
+        <DialogContent>
+          {packages.map((pkg, index) => (
+            <Box key={index} mb={2} borderBottom="1px solid #ccc" pb={2}>
+              <Typography variant="h6">{pkg.title}</Typography>
+              <List>
+                <ListItem>
+                  <ListItemText primary={`Cost: ${pkg.cost}`} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={`Foods: ${pkg.foods}`} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText primary={`Stay: ${pkg.stay}`} />
+                </ListItem>
+                <ListItem>
+                  <ListItemText
+                    primary={`Features: ${pkg.features.join(", ")}`}
+                  />
+                </ListItem>
+              </List>
+              <Box display="flex" justifyContent="flex-end">
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => {
+                    handleClose();
+                    navigate("/Payment");
+                  }}
+                >
+                  Book Now
+                </Button>
+              </Box>
             </Box>
-          </Box>
-        ))}
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose}>Close</Button>
-      </DialogActions>
-    </Dialog>
-  );
-};
+          ))}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleClose}>Close</Button>
+        </DialogActions>
+      </Dialog>
+    );
+  };
 
   return (
     <div>
@@ -162,7 +161,11 @@ const renderPackageDialog = () => {
 
       {/* Map */}
       <Box mb={5}>
-        <MapContainer center={[20, 0]} zoom={2} style={{ height: "400px", width: "100%" }}>
+        <MapContainer
+          center={[20, 0]}
+          zoom={2}
+          style={{ height: "400px", width: "100%" }}
+        >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; OpenStreetMap contributors'
@@ -183,12 +186,11 @@ const renderPackageDialog = () => {
         </MapContainer>
       </Box>
 
-      {/* Trending Destinations Title */}
+      {/* Trending Destinations */}
       <Typography variant="h4" align="center" gutterBottom>
         Trending Destinations
       </Typography>
 
-      {/* Destination Cards */}
       <Grid container spacing={3} justifyContent="center">
         {filteredDestinations.map((dest, index) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
@@ -197,10 +199,16 @@ const renderPackageDialog = () => {
                 component="img"
                 image={dest.image}
                 alt={dest.name}
-                sx={{ height: 200, objectFit: "cover" }}
+                sx={{
+                  width: "100%",
+                  height: "200px",
+                  objectFit: "cover",
+                }}
               />
               <CardContent>
-                <Typography variant="h6" align="center">{dest.name}</Typography>
+                <Typography variant="h6" align="center">
+                  {dest.name}
+                </Typography>
               </CardContent>
               <CardActions sx={{ justifyContent: "center", mt: "auto" }}>
                 <Button onClick={() => handleClickOpen(dest)}>View Packages</Button>

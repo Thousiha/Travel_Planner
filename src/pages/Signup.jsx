@@ -69,7 +69,7 @@ const Signup = () => {
 const styles = {
   body: {
     fontFamily: "'Arial', sans-serif",
-    backgroundColor: '#f5f5f5', // Dull white background
+    backgroundColor: '#f5f5f5', 
     margin: 0,
     padding: 0,
     display: 'flex',
@@ -86,7 +86,7 @@ const styles = {
     width: '350px',
   },
   header: {
-    color: '#003366', // Deep sea blue
+    color: '#003366', 
     textAlign: 'center',
     marginBottom: '30px',
     fontSize: '24px',
@@ -113,7 +113,7 @@ const styles = {
     borderColor: '#003366',
   },
   button: {
-    backgroundColor: '#003366', // Deep sea blue
+    backgroundColor: '#003366', 
     color: 'white',
     border: 'none',
     padding: '12px',
@@ -124,7 +124,7 @@ const styles = {
     transition: 'background-color 0.3s',
   },
   buttonHover: {
-    backgroundColor: '#002244', // Darker shade of deep sea blue
+    backgroundColor: '#002244', 
   },
   loginLink: {
     textAlign: 'center',

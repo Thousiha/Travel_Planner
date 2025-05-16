@@ -9,7 +9,8 @@ import {
   Stack,
   Divider,
 } from "@mui/material";
-import travel from "../assets/travel.png"
+import travel from "../assets/travel.png";
+
 const AdminLayout = () => {
   const location = useLocation();
 
@@ -28,9 +29,20 @@ const AdminLayout = () => {
       <AppBar position="fixed" sx={{ backgroundColor: "#0288d1" }}>
         <Toolbar sx={{ justifyContent: "space-between", alignItems: "center" }}>
           {/* Left: Logo */}
-          <Typography variant="h6" color="inherit" sx={{ flex: 1 }}>
-            Tia
-          </Typography>
+          <Box sx={{ flex: 1, display: "flex", alignItems: "center" }}>
+            <img 
+              src={travel} 
+              alt="Travel Logo" 
+              style={{ 
+                height: '60px', 
+                marginRight: '10px',
+                
+              }} 
+            />
+            <Typography variant="h6" color="inherit">
+              Tia
+            </Typography>
+          </Box>
 
           {/* Center: Nav Items */}
           <Stack direction="row" spacing={2} sx={{ flex: 2, justifyContent: "center" }}>
